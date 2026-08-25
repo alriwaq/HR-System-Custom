@@ -242,7 +242,10 @@ doc_events = {
 	"Job Opening": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Appraisal Cycle": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Employee Onboarding": {"after_insert": "hrms.telemetry.on_milestone_insert"},
-	"Salary Slip": {"on_submit": "hrms.telemetry.on_milestone_submit"},
+	"Salary Slip": {
+		"validate": "hrms.payroll.doctype.salary_slip.salary_slip_overtime_incentives.calculate_overtime_and_incentives",
+		"on_submit": "hrms.telemetry.on_milestone_submit",
+	},
 }
 
 # Scheduled Tasks
