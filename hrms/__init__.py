@@ -3,7 +3,7 @@ import inspect
 
 import frappe
 
-__version__ = "17.0.0-dev"
+__version__ = "15.0.0-dev"
 
 
 def refetch_resource(cache_key: str | list, user=None):
