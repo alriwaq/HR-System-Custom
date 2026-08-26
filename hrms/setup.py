@@ -945,6 +945,9 @@ def add_default_hr_permissions():
 
 def setup_repost_defaults():
 	accounts_settings = frappe.get_doc("Accounts Settings")
+	# repost_allowed_types field was introduced after ERPNext v15; skip silently if absent
+	if not accounts_settings.meta.get_field("repost_allowed_types"):
+		return
 	for x in frappe.get_hooks("repost_allowed_doctypes"):
 		accounts_settings.append("repost_allowed_types", {"document_type": x})
 	accounts_settings.save()
