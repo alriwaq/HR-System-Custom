@@ -640,6 +640,8 @@ def get_shift_details(shift_type_name: str, for_timestamp: datetime | None = Non
 		for_timestamp = now_datetime()
 
 	shift_type = get_shift_type(shift_type_name)
+	if not shift_type:
+		return frappe._dict()
 	start_datetime, end_datetime = get_shift_timings(shift_type, for_timestamp)
 
 	actual_start = start_datetime - timedelta(minutes=shift_type.begin_check_in_before_shift_start_time)
