@@ -21,7 +21,7 @@ from frappe.utils import (
 )
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.setup.doctype.holiday_list.holiday_list import is_half_holiday, is_holiday
+from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.employee_checkin.employee_checkin import (
@@ -231,10 +231,19 @@ class ShiftType(Document):
 				frappe.db.commit()  # nosemgrep
 
 	def is_half_holiday(self, employee, attendance_date):
+		# is_half_holiday was added in ERPNext v16; query the Holiday child table directly for v15 compat
 		holiday_list = self.get_holiday_list(employee, attendance_date)
-		if is_half_holiday(holiday_list, attendance_date):
-			return True
-		return False
+		if not holiday_list:
+			return False
+		try:
+			return bool(
+				frappe.db.exists(
+					"Holiday",
+					{"parent": holiday_list, "holiday_date": attendance_date, "is_half_day": 1},
+				)
+			)
+		except Exception:
+			return False
 
 	def get_employee_checkins(self) -> list[dict]:
 		return frappe.get_all(
