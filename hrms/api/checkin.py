@@ -141,7 +141,7 @@ def _create_checkin_documents(records):
 					"error": str(e),
 				}
 			)
-			frappe.log_error(f"Checkin record {idx} failed", str(e))
+
 
 	frappe.db.commit()
 	frappe.flags.in_import = False
